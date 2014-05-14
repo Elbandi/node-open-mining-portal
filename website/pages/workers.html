@@ -54,8 +54,13 @@
                    {{var workerstat = it.stats.pools[pool].workers[worker];}}
                     <tr class="pure-table-odd">
                         <td>{{=worker}}</td>
+{{? it.stats.pools[pool].algorithm == "x11"}}
+                        <td>{{=Math.floor(workerstat.shares * 1000) / 1000}}</td>
+                        <td>{{=Math.floor(workerstat.invalidshares * 1000) / 1000}}</td>
+{{??}}
                         <td>{{=Math.floor(workerstat.shares)}}</td>
                         <td>{{=Math.floor(workerstat.invalidshares)}}</td>
+{{?}}
                         <td>{{? workerstat.shares > 0}} {{=Math.floor(10000 * workerstat.shares / (workerstat.shares + workerstat.invalidshares)) / 100}}% {{??}} 0% {{?}}</td>
                         <td>{{=workerstat.hashrateString}}</td>
                     </tr>
