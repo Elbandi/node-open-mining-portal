@@ -38,7 +38,7 @@ module.exports = function(logger){
         'getting_started.html': 'getting_started',
         'stats.html': 'stats',
         'tbs.html': 'tbs',
-        'workers.html': 'workers',
+        'workers.html': 'workers|pool',
         'api.html': 'api',
         'admin.html': 'admin',
         'mining_key.html': 'mining_key'
@@ -80,8 +80,19 @@ module.exports = function(logger){
         async.each(files, function(fileName, callback){
             var filePath = 'website/' + (fileName === 'index.html' ? '' : 'pages/') + fileName;
             fs.readFile(filePath, 'utf8', function(err, data){
-                var pTemp = dot.template(data);
-                pageTemplates[pageFiles[fileName]] = pTemp
+                var parts = pageFiles[fileName].split("|");
+                if (parts[1] === 'pool') {
+                    var enabledCoins = Object.keys(poolConfigs).map(function(c){return c.toLowerCase()});
+                    enabledCoins.forEach(function(c){
+                        var pTemp = dot.template(data, undefined, {pool: c});
+                        pageTemplates[parts[0] + '_' + c] = pTemp
+                    });
+                }
+//              else if (parts[1] === 'foo') { ... }
+                else {
+                    var pTemp = dot.template(data);
+                    pageTemplates[parts[0]] = pTemp
+                }
                 callback();
             });
         }, function(err){

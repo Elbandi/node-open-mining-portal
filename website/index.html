@@ -19,6 +19,7 @@
     <link rel="stylesheet" href="/static/nvd3.css">
 
     <script src="/static/main.js"></script>
+    <link rel="stylesheet" href="/static/pure-dropdown.css">
     <link rel="stylesheet" href="/static/style.css">
 
     <title>NOMP</title>
@@ -32,33 +33,38 @@
 
         <a class="pure-menu-heading hot-swapper" href="/"><i class="fa fa-home"></i>&nbsp;NOMP</a>
 
-        <ul>
+        <ul class="pure-menu-children">
             <li class="{{? it.selected === 'getting_started' }}pure-menu-selected{{?}}">
-                <a class="hot-swapper" href="/getting_started">
+                <a class="hot-swapper" href="/getting_started" id="menu_getting_started">
                     <i class="fa fa-rocket"></i>&nbsp;
                     Getting Started
                 </a>
             </li>
             <li class="{{? it.selected === 'stats' }}pure-menu-selected{{?}}">
-                <a class="hot-swapper" href="/stats">
+                <a class="hot-swapper" href="/stats" id="menu_stats">
                     <i class="fa fa-bar-chart-o"></i>&nbsp;
                     Graph Stats
                 </a>
             </li>
             <li class="{{? it.selected === 'tbs' }}pure-menu-selected{{?}}">
-                <a class="hot-swapper" href="/tbs">
+                <a class="hot-swapper" href="/tbs" id="menu_tbs">
                     <i class="fa fa-table"></i>&nbsp;
                     Tab Stats
                 </a>
             </li>
-            <li class="{{? it.selected === 'workers' }}pure-menu-selected{{?}}">
-                <a class="hot-swapper" href="/workers">
+            <li class="pure-menu-can-have-children{{? it.selected.substring(0, 7) === 'workers' }} pure-menu-selected{{?}}">
+                <a class="pure-menu-label" href="#" id="menu_workers">
                     <i class="fa fa-cogs"></i>&nbsp;
                     Workers Stats
                 </a>
+                <ul class="pure-menu-children">
+                {{ for(var pool in it.stats.pools) { }}
+                    <li><a class="hot-swapper" href="/workers_{{=it.stats.pools[pool].name}}">{{=it.stats.pools[pool].name}}</a></li>
+                {{ } }}
+                </ul>
             </li>
             <li class="{{? it.selected === 'api' }}pure-menu-selected{{?}}">
-                <a class="hot-swapper" href="/api">
+                <a class="hot-swapper" href="/api" id="menu_api">
                     <i class="fa fa-code"></i>&nbsp;
                     API
                 </a>

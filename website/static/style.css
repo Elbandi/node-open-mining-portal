@@ -32,16 +32,21 @@ header > .home-menu > a.pure-menu-heading{
     font-size: 1.5em;
 }
 
-header > .home-menu > ul > li > a{
-    color: #ced4d9;
+header > .home-menu ul > li > a{
+    color: #ced4d9 !important;
+    text-transform: capitalize;
 }
 
-header > .home-menu > ul > li > a:hover, header > .home-menu > ul > li > a:focus{
-    background: inherit !important;
+header > .home-menu ul > li, header > .home-menu ul > li a:hover, header > .home-menu ul > li a:focus{
+    background: #2d2d2d !important;
 }
 
-header > .home-menu > ul > li > a:hover, header > .home-menu > ul > li.pure-menu-selected > a{
-    color: white;
+header > .home-menu ul > li > a:hover, header > .home-menu ul > li > a:focus{
+    background: #2d2d2d !important;
+}
+
+header > .home-menu ul > li > a:hover, header > .home-menu ul > li.pure-menu-selected > a{
+    color: white !important;
 }
 
 main{

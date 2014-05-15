@@ -32,40 +32,31 @@
 
 </style>
 
-
-<div id="topCharts">
-
-{{ for(var pool in it.stats.pools) { }}
-
-    <div class="chartWrapper">
-        <div class="chartLabel">{{=it.stats.pools[pool].name}}</div>
-        <div class="chartHolder">
-            <table class="pure-table">
-                <thead>
-                <tr>
-                    <th>Address</th>
-                    <th>Shares</th>
-                    <th>Invalid shares</th>
-                    <th>Efficiency</th>
-                    <th>Hashrate</th>
-                </tr>
-                </thead>
-                {{ for(var worker in it.stats.pools[pool].workers) { }}
-                   {{var workerstat = it.stats.pools[pool].workers[worker];}}
-                    <tr class="pure-table-odd">
-                        <td>{{=worker}}</td>
+{{ var pool = "{{#def.pool}}"; }}
+<table class="pure-table">
+    <thead>
+    <tr>
+        <th>Address</th>
+        <th>Shares</th>
+        <th>Invalid shares</th>
+        <th>Efficiency</th>
+        <th>Hashrate</th>
+    </tr>
+    </thead>
+    {{ var workers = Object.keys(it.stats.pools[pool].workers).sort(function(a,b) { return a.shares-b.shares}); }}
+    {{ for(var worker in workers) { }}
+       {{var workerstat = it.stats.pools[pool].workers[workers[worker]];}}
+        <tr class="pure-table-odd">
+            <td>{{=workers[worker]}}</td>
 {{? it.stats.pools[pool].algorithm == "x11"}}
-                        <td>{{=Math.floor(workerstat.shares * 1000) / 1000}}</td>
-                        <td>{{=Math.floor(workerstat.invalidshares * 1000) / 1000}}</td>
+            <td>{{=Math.floor(workerstat.shares * 1000) / 1000}}</td>
+            <td>{{=Math.floor(workerstat.invalidshares * 1000) / 1000}}</td>
 {{??}}
-                        <td>{{=Math.floor(workerstat.shares)}}</td>
-                        <td>{{=Math.floor(workerstat.invalidshares)}}</td>
+            <td>{{=Math.floor(workerstat.shares)}}</td>
+            <td>{{=Math.floor(workerstat.invalidshares)}}</td>
 {{?}}
-                        <td>{{? workerstat.shares > 0}} {{=Math.floor(10000 * workerstat.shares / (workerstat.shares + workerstat.invalidshares)) / 100}}% {{??}} 0% {{?}}</td>
-                        <td>{{=workerstat.hashrateString}}</td>
-                    </tr>
-                {{ } }}
-            </table>
-        </div>
-    </div>
-{{ } }}
+            <td>{{? workerstat.shares > 0}} {{=Math.floor(10000 * workerstat.shares / (workerstat.shares + workerstat.invalidshares)) / 100}}% {{??}} 0% {{?}}</td>
+            <td>{{=workerstat.hashrateString}}</td>
+        </tr>
+    {{ } }}
+</table>

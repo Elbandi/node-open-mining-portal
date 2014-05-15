@@ -3,7 +3,7 @@ $(function(){
     var hotSwap = function(page, pushSate){
         if (pushSate) history.pushState(null, null, '/' + page);
         $('.pure-menu-selected').removeClass('pure-menu-selected');
-        $('a[href="/' + page + '"]').parent().addClass('pure-menu-selected');
+        $('a[id^="menu_' + page.split('_')[0] + '"]').parent().addClass('pure-menu-selected');
         $.get("/get_page", {id: page}, function(data){
             $('main').html(data);
         }, 'html')
