@@ -1,0 +1,60 @@
+<style>
+
+    #topCharts {
+        padding: 18px;
+    }
+
+    #topCharts > div > div > svg {
+        display: block;
+        height: 280px;
+    }
+
+    .chartWrapper {
+        border: solid 1px #c7c7c7;
+        border-radius: 5px;
+        padding: 5px;
+        margin-bottom: 18px;
+    }
+
+    .chartLabel {
+        font-size: 1.2em;
+        text-align: center;
+        padding: 4px;
+    }
+
+    .chartHolder {
+
+    }
+
+    table {
+        width: 100%;
+    }
+
+</style>
+
+
+{{ var pool = "{{#def.pool}}"; }}
+            <table class="pure-table">
+                <thead>
+                <tr>
+                    <th>Address</th>
+                    <th>Shares</th>
+                    <th>Shares %</th>
+                    <th>Hash Rate ({{=it.stats.windowtime}} min avg)</th>
+                </tr>
+                </thead>
+                {{ var workers = Object.keys(it.stats.pools[pool].roundshares).sort(function(a,b) { return a.roundstat-b.roundstat}); }}
+                {{ for(var worker in workers) { }}
+                   {{var roundstat = it.stats.pools[pool].roundshares[workers[worker]];}}
+                    <tr class="pure-table-odd">
+                        <td>{{=workers[worker]}}</td>
+{{? it.stats.pools[pool].algorithm == "x11"}}
+                        <td>{{=Math.floor(roundstat.roundstat * 1000) / 1000}}</td>
+{{??}}
+                        <td>{{=Math.floor(roundstat.roundstat)}}</td>
+{{?}}
+                        <td>{{=roundstat.roundstatrate}}</td>
+                        <td>{{? it.stats.pools[pool].workers[workers[worker]] }} {{=it.stats.pools[pool].workers[workers[worker]].hashrateString}} {{??}} 0 kh/s {{?}}</td>
+                    </tr>
+                {{ } }}
+            </table>

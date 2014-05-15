@@ -100,11 +100,11 @@ module.exports = function(logger, portalConfig, poolConfigs){
     this.getGlobalStats = function(callback){
 
         var statGatherTime = Date.now() / 1000 | 0;
+        var windowTime = (((Date.now() / 1000) - portalConfig.website.stats.hashrateWindow) | 0).toString();
 
         var allCoinStats = {};
 
         async.each(redisClients, function(client, callback){
-            var windowTime = (((Date.now() / 1000) - portalConfig.website.stats.hashrateWindow) | 0).toString();
             var redisCommands = [];
 
 
@@ -112,6 +112,7 @@ module.exports = function(logger, portalConfig, poolConfigs){
                 ['zremrangebyscore', ':hashrate', '-inf', '(' + windowTime],
                 ['zrangebyscore', ':hashrate', windowTime, '+inf'],
                 ['hgetall', ':stats'],
+                ['hgetall', ':shares:roundCurrent'],
                 ['scard', ':blocksPending'],
                 ['scard', ':blocksConfirmed'],
                 ['scard', ':blocksOrphaned']
@@ -141,6 +142,7 @@ module.exports = function(logger, portalConfig, poolConfigs){
                             symbol: poolConfigs[coinName].coin.symbol.toUpperCase(),
                             algorithm: poolConfigs[coinName].coin.algorithm,
                             hashrates: replies[i + 1],
+                            roundshares: replies[i + 3],
                             poolStats: {
                                 validShares: replies[i + 2] ? (replies[i + 2].validShares || 0) : 0,
                                 validBlocks: replies[i + 2] ? (replies[i + 2].validBlocks || 0) : 0,
@@ -148,9 +150,9 @@ module.exports = function(logger, portalConfig, poolConfigs){
                                 totalPaid: replies[i + 2] ? (replies[i + 2].totalPaid || 0) : 0
                             },
                             blocks: {
-                                pending: replies[i + 3],
-                                confirmed: replies[i + 4],
-                                orphaned: replies[i + 5]
+                                pending: replies[i + 4],
+                                confirmed: replies[i + 5],
+                                orphaned: replies[i + 6]
                             }
                         };
                         allCoinStats[coinStats.name] = (coinStats);
@@ -167,6 +169,7 @@ module.exports = function(logger, portalConfig, poolConfigs){
 
             var portalStats = {
                 time: statGatherTime,
+                windowtime: portalConfig.website.stats.hashrateWindow / 60,
                 global:{
                     workers: 0,
                     hashrate: 0
@@ -226,6 +229,17 @@ module.exports = function(logger, portalConfig, poolConfigs){
 
                 for (var worker in coinStats.workers) {
                     coinStats.workers[worker].hashrateString = _this.getReadableHashRateString(shareMultiplier * coinStats.workers[worker].shares / portalConfig.website.stats.hashrateWindow);
+                }
+
+                var sum = 0;
+                Object.keys(coinStats.roundshares).forEach(function(worker) {
+                    sum += parseFloat(coinStats.roundshares[worker]);
+                });
+                for(var worker in coinStats.roundshares) {
+                    coinStats.roundshares[worker] = {
+                        roundstat: coinStats.roundshares[worker],
+                        roundstatrate: Math.floor(10000 * parseFloat(coinStats.roundshares[worker]) / sum) / 100
+                    };
                 }
 
                 delete coinStats.hashrates;

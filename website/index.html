@@ -63,6 +63,17 @@
                 {{ } }}
                 </ul>
             </li>
+            <li class="pure-menu-can-have-children{{? it.selected.substring(0, 10) === 'roundstats' }} pure-menu-selected{{?}}">
+                <a class="pure-menu-label" href="#" id="menu_roundstats">
+                    <i class="fa fa-cogs"></i>&nbsp;
+                    Round Stats
+                </a>
+                <ul class="pure-menu-children">
+                {{ for(var pool in it.stats.pools) { }}
+                    <li><a class="hot-swapper" href="/roundstats_{{=it.stats.pools[pool].name}}">{{=it.stats.pools[pool].name}}</a></li>
+                {{ } }}
+                </ul>
+            </li>
             <li class="{{? it.selected === 'api' }}pure-menu-selected{{?}}">
                 <a class="hot-swapper" href="/api" id="menu_api">
                     <i class="fa fa-code"></i>&nbsp;
