@@ -46,32 +46,34 @@
                     Graph Stats
                 </a>
             </li>
-            <li class="{{? it.selected === 'tbs' }}pure-menu-selected{{?}}">
-                <a class="hot-swapper" href="/tbs" id="menu_tbs">
+            <li class="pure-menu-can-have-children{{? it.selected === 'tbs' }} pure-menu-selected{{?}}">
+                <a class="pure-menu-label hot-swapper" href="/tbs" id="menu_tbs">
                     <i class="fa fa-table"></i>&nbsp;
                     Tab Stats
                 </a>
-            </li>
-            <li class="pure-menu-can-have-children{{? it.selected.substring(0, 7) === 'workers' }} pure-menu-selected{{?}}">
-                <a class="pure-menu-label" href="#" id="menu_workers">
-                    <i class="fa fa-cogs"></i>&nbsp;
-                    Workers Stats
-                </a>
                 <ul class="pure-menu-children">
-                {{ for(var pool in it.stats.pools) { }}
-                    <li><a class="hot-swapper" href="/workers_{{=it.stats.pools[pool].name}}">{{=it.stats.pools[pool].name}}</a></li>
-                {{ } }}
-                </ul>
-            </li>
-            <li class="pure-menu-can-have-children{{? it.selected.substring(0, 10) === 'roundstats' }} pure-menu-selected{{?}}">
-                <a class="pure-menu-label" href="#" id="menu_roundstats">
-                    <i class="fa fa-cogs"></i>&nbsp;
-                    Round Stats
-                </a>
-                <ul class="pure-menu-children">
-                {{ for(var pool in it.stats.pools) { }}
-                    <li><a class="hot-swapper" href="/roundstats_{{=it.stats.pools[pool].name}}">{{=it.stats.pools[pool].name}}</a></li>
-                {{ } }}
+                    <li class="pure-menu-can-have-children{{? it.selected.substring(0, 7) === 'workers' }} pure-menu-selected{{?}}">
+                        <a class="pure-menu-label" href="#" id="menu_workers">
+                            <i class="fa fa-cogs"></i>&nbsp;
+                            Workers Stats
+                        </a>
+                        <ul class="pure-menu-children">
+                        {{ for(var pool in it.stats.pools) { }}
+                            <li><a class="hot-swapper" href="/workers_{{=it.stats.pools[pool].name}}" data-highlight="tbs">{{=it.stats.pools[pool].name}}</a></li>
+                        {{ } }}
+                        </ul>
+                    </li>
+                    <li class="pure-menu-can-have-children{{? it.selected.substring(0, 10) === 'roundstats' }} pure-menu-selected{{?}}">
+                        <a class="pure-menu-label" href="#" id="menu_roundstats">
+                            <i class="fa fa-cogs"></i>&nbsp;
+                            Round Stats
+                        </a>
+                        <ul class="pure-menu-children">
+                        {{ for(var pool in it.stats.pools) { }}
+                            <li><a class="hot-swapper" href="/roundstats_{{=it.stats.pools[pool].name}}" data-highlight="tbs">{{=it.stats.pools[pool].name}}</a></li>
+                        {{ } }}
+                        </ul>
+                    </li>
                 </ul>
             </li>
             <li class="{{? it.selected === 'api' }}pure-menu-selected{{?}}">

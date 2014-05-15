@@ -1,9 +1,9 @@
 $(function(){
 
-    var hotSwap = function(page, pushSate){
+    var hotSwap = function(page, highlight, pushSate){
         if (pushSate) history.pushState(null, null, '/' + page);
         $('.pure-menu-selected').removeClass('pure-menu-selected');
-        $('a[id^="menu_' + page.split('_')[0] + '"]').parent().addClass('pure-menu-selected');
+        $('a[id^="menu_' + highlight + '"]').parent().addClass('pure-menu-selected');
         $.get("/get_page", {id: page}, function(data){
             $('main').html(data);
         }, 'html')
@@ -12,7 +12,9 @@ $(function(){
     $('.hot-swapper').click(function(event){
         if (event.which !== 1) return;
         var pageId = $(this).attr('href').slice(1);
-        hotSwap(pageId, true);
+        var higlight = $(this).attr('data-highlight');
+        if (higlight == null) higlight = pageId;
+        hotSwap(pageId, higlight, true);
         event.preventDefault();
         return false;
     });
