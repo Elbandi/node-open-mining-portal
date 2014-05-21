@@ -43,12 +43,13 @@
         <th>Hashrate</th>
     </tr>
     </thead>
-    {{ var workers = Object.keys(it.stats.pools[pool].workers).sort(function(a,b) { return a.shares-b.shares}); }}
+    {{ var poolstats = it.stats.pools[pool]; }}
+    {{ var workers = Object.keys(poolstats.workers).sort(function(a,b) { return poolstats.workers[b].shares - poolstats.workers[a].shares}); }}
     {{ for(var worker in workers) { }}
-       {{var workerstat = it.stats.pools[pool].workers[workers[worker]];}}
+       {{var workerstat = poolstats.workers[workers[worker]];}}
         <tr class="pure-table-odd">
             <td>{{=workers[worker]}}</td>
-{{? it.stats.pools[pool].algorithm == "x11"}}
+{{? poolstats.algorithm == "x11"}}
             <td>{{=Math.floor(workerstat.shares * 1000) / 1000}}</td>
             <td>{{=Math.floor(workerstat.invalidshares * 1000) / 1000}}</td>
 {{??}}

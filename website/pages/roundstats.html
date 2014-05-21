@@ -43,18 +43,19 @@
                     <th>Hash Rate ({{=it.stats.windowtime}} min avg)</th>
                 </tr>
                 </thead>
-                {{ var workers = Object.keys(it.stats.pools[pool].roundshares).sort(function(a,b) { return a.roundstat-b.roundstat}); }}
+                {{ var poolstats = it.stats.pools[pool]; }}
+                {{ var workers = Object.keys(poolstats.roundshares).sort(function(a,b) { return poolstats.roundshares[b].roundstat - poolstats.roundshares[a].roundstat}); }}
                 {{ for(var worker in workers) { }}
-                   {{var roundstat = it.stats.pools[pool].roundshares[workers[worker]];}}
+                   {{var roundstat = poolstats.roundshares[workers[worker]];}}
                     <tr class="pure-table-odd">
                         <td>{{=workers[worker]}}</td>
-{{? it.stats.pools[pool].algorithm == "x11"}}
+{{? poolstats.algorithm == "x11"}}
                         <td>{{=Math.floor(roundstat.roundstat * 1000) / 1000}}</td>
 {{??}}
                         <td>{{=Math.floor(roundstat.roundstat)}}</td>
 {{?}}
                         <td>{{=roundstat.roundstatrate}}</td>
-                        <td>{{? it.stats.pools[pool].workers[workers[worker]] }} {{=it.stats.pools[pool].workers[workers[worker]].hashrateString}} {{??}} 0 kh/s {{?}}</td>
+                        <td>{{? poolstats.workers[workers[worker]] }} {{=poolstats.workers[workers[worker]].hashrateString}} {{??}} 0 kh/s {{?}}</td>
                     </tr>
                 {{ } }}
             </table>
